@@ -31,7 +31,7 @@ then
     exit 1
 fi
 
-DEVICES=$(scanimage -L)
+DEVICES=$(scanimage -L | grep '^device')
 
 if [ -z "$DEVICES" ]
 then
@@ -39,7 +39,7 @@ then
     exit 1
 fi
 
-DEVICE=$(echo "$DEVICES" | dmenu -l 20 -p "Choose Device" | cut -d\` -f2 | cut -d\' -f1)
+DEVICE=$(echo "$DEVICES" | dmenu -l 5 -p "Choose Device" | cut -d\` -f2 | cut -d\' -f1)
 
 if [ -z "$DEVICE" ]
 then
@@ -51,8 +51,9 @@ echo "Using device $DEVICE"
 while [ $pages -gt 0 ]
 do
     echo "Press Enter to scan"
-    read
-    TEMP_TIFF=$(mktemp --suffix=.tiff)
+    read r
+    unset r
+    #TEMP_TIFF=$(mktemp --suffix=.tiff)
     scanimage -d "$DEVICE" --format jpeg > "img-$pages.jpg"
     pages=$(expr $pages - 1)
 done
